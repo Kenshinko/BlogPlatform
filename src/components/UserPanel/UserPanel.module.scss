@@ -1,6 +1,14 @@
 .user-panel {
   column-gap: 25px;
 
+  &__username {
+    color: rgba(0, 0, 0, 0.85);
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.55rem;
+  }
+
   &__btn {
     display: block;
     font-family: 'Inter', sans-serif;
@@ -10,8 +18,15 @@
     border-radius: 5px;
     padding: 0 15px;
     height: 50px;
-    color: #52c41a;
-    border-color: #52c41a;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.75);
+  }
+
+  &__articleBtn {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.57rem;
   }
 }
 
@@ -19,4 +34,9 @@
   color: rgba(0, 0, 0, 0.85);
   border: none;
   box-shadow: none;
+}
+
+.active {
+  color: #52c41a;
+  border-color: #52c41a;
 }

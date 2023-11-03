@@ -1,4 +1,4 @@
-import { createAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 import { FS } from '../types/app.types';
 import { IServerResponce } from '../types/api.types';
