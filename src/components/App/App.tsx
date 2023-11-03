@@ -1,13 +1,15 @@
-import { Routes, Route, Link, useParams } from 'react-router-dom';
+// import { useEffect } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import { Layout, Pagination } from 'antd';
 const { Header, Footer } = Layout;
 
 import UserPanel from '../UserPanel';
+import UserForm from '../Pages/UserForm';
 import ArticlesList from '../ArticlesList';
 import Article from '../Pages/Article';
+import { toggleOnArticle, togglePagination } from '../../store/UtilitySlice';
 import { fetchArticles } from '../../services/RealWorld.api';
 import { useAppDispatch, useStateSelector } from '../../hooks';
-import { toggleOnArticle, togglePagination } from '../../store/UtilitySlice';
 
 import style from './App.module.scss';
 
@@ -20,6 +22,12 @@ const App: React.FC = () => {
     dispatch(toggleOnArticle(true));
     dispatch(togglePagination(true));
   };
+
+  // useEffect(() => {
+  //   if (userToken) {
+  //     dispatch(actionLogIn());
+  //   }
+  // }, []);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -38,6 +46,12 @@ const App: React.FC = () => {
         <Route path="/" element={<ArticlesList />} />
         <Route path="/articles" element={<ArticlesList />} />
         <Route path="/articles/:slug" element={<Article preview={false} />} />
+        {/* Вход с систему */}
+        <Route path="/sign-in" element={<UserForm />} />
+        {/* Регистрация */}
+        <Route path="/sign-up" element={<UserForm />} />
+        {/* Редактирование профиля */}
+        <Route path="/profile" element={<UserForm />} />
       </Routes>
 
       <Footer className={style['footer']}>

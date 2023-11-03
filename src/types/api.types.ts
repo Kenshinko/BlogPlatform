@@ -1,4 +1,12 @@
-import { FS, IArticle } from './app.types';
+import { US, FS, IArticle } from './app.types';
+
+export type IUserResponce = {
+  email: string;
+  token: string;
+  username: string;
+  bio?: string;
+  image?: string | null;
+};
 
 export type IServerResponce = {
   articles: IArticle[];
@@ -11,4 +19,21 @@ export type IArticleResponce = {
   article?: IArticle;
   status: FS;
   error?: string | null;
+};
+
+export type IUserFormRequest = {
+  username: string;
+  email: string;
+  password: string;
+  confirmpass?: string;
+  image?: string;
+  agreement?: boolean;
+};
+
+export type IUserDataUpdate = {
+  email?: string;
+  username: string;
+  password?: string;
+  bio?: string;
+  image?: string;
 };

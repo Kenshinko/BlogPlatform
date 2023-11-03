@@ -12,6 +12,7 @@ import { IArticleProps } from '../../../types/props.types';
 import { fetchAnArticle } from '../../../services/RealWorld.api';
 import { toggleOnArticle, togglePagination } from '../../../store/UtilitySlice';
 import { useAppDispatch, useStateSelector } from '../../../hooks';
+import { capitalizeWords } from '../../../utilities';
 
 import style from './Article.module.scss';
 
@@ -23,26 +24,22 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
     error,
   } = useStateSelector((state) => state.article);
   const isPreview = useStateSelector((state) => state.utilities.isPreview);
-  const isArticlesList = useStateSelector((state) => state.utilities.isArticlesList);
   const listStatus: FS = useStateSelector((state) => state.articles.status);
 
+  // Получаем id статьи, из адресной строки, пропсов или в крайнем случае из стора
   let { slug } = useParams();
   if (!slug) slug = article?.slug || fullArticle?.slug;
 
   useEffect(() => {
-    // Обновляем страницу списка статей
-    if (isArticlesList && listStatus === FS.SUCCEEDED) {
-      dispatch(toggleOnArticle(true));
-      dispatch(togglePagination(true));
-    }
-
     // Обновляем страницу одной статьи
     if (articleStatus === FS.IDLE && listStatus !== FS.SUCCEEDED) {
       dispatch(toggleOnArticle(false));
       dispatch(togglePagination(false));
-      dispatch(fetchAnArticle(slug!));
+      if (slug) {
+        dispatch(fetchAnArticle(slug));
+      }
     }
-  }, []);
+  }, [articleStatus, listStatus, slug, dispatch]);
 
   const articleData = article || fullArticle;
   let title, favorited, favoritesCount, tagList, description, createdAt: string, author, body;
@@ -127,7 +124,9 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
         </div>
         <div className={style['article__side-info']}>
           <div className={style['article__about']}>
-            <span className={style['article__author']}>{username}</span>
+            <span className={style['article__author']}>
+              {username && capitalizeWords(username)}
+            </span>
             <span className={style['article__publish-date']}>
               {createdAt! ? format(new Date(createdAt), 'MMMM d, yyyy') : null}
             </span>
@@ -139,7 +138,9 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
     </Card>
   );
 
-  return <>{articleStatus === FS.LOADING ? cardPlaceholder : card}</>;
+  return (
+    <>{articleStatus === FS.LOADING || listStatus === FS.LOADING ? cardPlaceholder : card}</>
+  );
 };
 
 export default Article;
