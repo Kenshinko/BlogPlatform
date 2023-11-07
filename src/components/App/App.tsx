@@ -39,10 +39,6 @@ const App: React.FC = () => {
     dispatch(setCurrentPageNumber(page));
   };
 
-  useEffect(() => {
-    console.log(pageNumber);
-  }, [pageNumber]);
-
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header className={style['header']}>
