@@ -5,8 +5,8 @@ import { ICreateArticleRequest, IUserDataUpdate } from '../types/api.types';
 
 const baseURL = 'https://blog.kata.academy/api/';
 const currentLocalStorage: string | null = localStorage.getItem('persist:MyBlog');
-const currentUser: string = JSON.parse(currentLocalStorage!).user;
-const userHasToken: string = JSON.parse(currentUser).user.token;
+const currentUser: string = JSON.parse(currentLocalStorage!)?.user;
+const userHasToken: string = currentUser && JSON.parse(currentUser).user.token;
 
 const enum Method {
   GET = 'GET',
