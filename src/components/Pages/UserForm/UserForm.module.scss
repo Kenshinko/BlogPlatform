@@ -52,11 +52,9 @@
     line-height: 1.4rem;
   }
 
-  &__submit-btn {
+  &__button {
     height: 40px;
-    margin: 20px 0 8px;
 
-    color: #fff;
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     font-weight: 400;
@@ -90,5 +88,31 @@
 
   &__errBorder {
     border-color: #f5222d;
+  }
+}
+
+.submitBtn {
+  margin: 20px 0 8px;
+  width: 320px;
+}
+
+.tagBtn {
+  padding: 0 36px;
+}
+
+.tags {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
+.tag {
+  display: flex;
+  align-items: flex-end;
+  column-gap: 18px;
+
+  &__input {
+    width: 300px;
+    margin-bottom: 0;
   }
 }

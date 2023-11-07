@@ -1,11 +1,11 @@
 import { Controller } from 'react-hook-form';
 import { Form, Input } from 'antd';
 
-import { FS, IFromInput } from '../../../../types/app.types';
+import { FS, IFormInput } from '../../../../types/app.types';
 import { useStateSelector } from '../../../../hooks';
 import style from '../UserForm.module.scss';
 
-const EmailInput: React.FC<IFromInput> = ({ control, errors, inputValue }) => {
+const EmailInput: React.FC<IFormInput> = ({ control, errors, inputValue }) => {
   const fetchStatus = useStateSelector((state) => state.user.fetchStatus);
 
   return (

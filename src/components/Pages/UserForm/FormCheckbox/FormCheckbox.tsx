@@ -1,10 +1,10 @@
 import { Controller } from 'react-hook-form';
 import { Form, Checkbox } from 'antd';
 
-import { IFromInput } from '../../../../types/app.types';
+import { IFormInput } from '../../../../types/app.types';
 // import style from '../UserForm.module.scss';
 
-const FormCheckbox: React.FC<IFromInput> = ({ control }) => {
+const FormCheckbox: React.FC<IFormInput> = ({ control }) => {
   return (
     <Form.Item>
       <Controller

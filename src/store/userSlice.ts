@@ -1,7 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { FS, US } from '../types/app.types';
-import { createUser, loginUser, updateUser } from '../services/RealWorld.api';
+import {
+  createUser,
+  loginUser,
+  updateUser,
+  createArticle,
+  updateArticle,
+  deleteArticle,
+  addFavorite,
+  removeFavorite,
+} from '../services/RealWorld.api';
 import { IUserResponce } from '../types/api.types';
 
 // State
@@ -17,7 +26,7 @@ const initialState: {
     bio: '',
     image: null,
   },
-  userStatus: US.UNAUTHENTICATED,
+  userStatus: US.UNAUTH,
   fetchStatus: FS.IDLE,
 };
 
@@ -27,10 +36,10 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     actionLogIn(state) {
-      state.userStatus = US.AUTHENTICATED;
+      state.userStatus = US.AUTH;
     },
     actionLogOut(state) {
-      state.userStatus = US.UNAUTHENTICATED;
+      state.userStatus = US.UNAUTH;
     },
   },
   extraReducers: (builder) => {
@@ -53,7 +62,7 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.fetchStatus = FS.SUCCEEDED;
-        state.userStatus = US.AUTHENTICATED;
+        state.userStatus = US.AUTH;
 
         const { email, username, token, image } = action.payload.data.user;
         state.user.email = email;
@@ -63,7 +72,6 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.fetchStatus = FS.REJECTED;
-        //@ts-ignore
         console.log(action);
       })
       // Обновление данный пользователя
@@ -81,6 +89,66 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state) => {
         state.fetchStatus = FS.REJECTED;
+      })
+      // Публикация статьи
+      .addCase(createArticle.pending, (state) => {
+        state.fetchStatus = FS.LOADING;
+      })
+      .addCase(createArticle.fulfilled, (state, action) => {
+        state.fetchStatus = FS.SUCCEEDED;
+        console.log(action.payload.data);
+      })
+      .addCase(createArticle.rejected, (state, action) => {
+        state.fetchStatus = FS.REJECTED;
+        console.log(action.error.message);
+      })
+      // Обновление статьи
+      .addCase(updateArticle.pending, (state) => {
+        state.fetchStatus = FS.LOADING;
+      })
+      .addCase(updateArticle.fulfilled, (state, action) => {
+        state.fetchStatus = FS.SUCCEEDED;
+        console.log(action.payload.data);
+      })
+      .addCase(updateArticle.rejected, (state, action) => {
+        state.fetchStatus = FS.REJECTED;
+        console.log(action.error.message);
+      })
+      // Удаление статьи
+      .addCase(deleteArticle.pending, (state) => {
+        state.fetchStatus = FS.LOADING;
+      })
+      .addCase(deleteArticle.fulfilled, (state, action) => {
+        state.fetchStatus = FS.SUCCEEDED;
+        console.log(action.payload.data);
+      })
+      .addCase(deleteArticle.rejected, (state, action) => {
+        state.fetchStatus = FS.REJECTED;
+        console.log(action.error.message);
+      })
+      // Добавление в избранное
+      .addCase(addFavorite.pending, (state) => {
+        state.fetchStatus = FS.LOADING;
+      })
+      .addCase(addFavorite.fulfilled, (state, action) => {
+        state.fetchStatus = FS.SUCCEEDED;
+        console.log(action.payload.data);
+      })
+      .addCase(addFavorite.rejected, (state, action) => {
+        state.fetchStatus = FS.REJECTED;
+        console.log(action.error.message);
+      })
+      // Удаление из избранного
+      .addCase(removeFavorite.pending, (state) => {
+        state.fetchStatus = FS.LOADING;
+      })
+      .addCase(removeFavorite.fulfilled, (state, action) => {
+        state.fetchStatus = FS.SUCCEEDED;
+        console.log(action.payload.data);
+      })
+      .addCase(removeFavorite.rejected, (state, action) => {
+        state.fetchStatus = FS.REJECTED;
+        console.log(action.error.message);
       });
   },
 });

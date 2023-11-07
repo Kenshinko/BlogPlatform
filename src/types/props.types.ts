@@ -9,3 +9,14 @@ export type IArticleProps = {
   article?: IArticle;
   preview: boolean;
 };
+
+export type ICreateArticleProps = {
+  title: string;
+  description: string;
+  body: string;
+  tags?: { name: string }[];
+};
+
+export type IEditArticleProps = {
+  editMode?: boolean;
+};

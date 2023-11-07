@@ -1,9 +1,10 @@
-import { Button, Space, Avatar } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import { Button, Space, Avatar } from 'antd';
 
 import { US } from '../../types/app.types';
-import { actionLogOut } from '../../store/userSlice';
 import { useAppDispatch, useStateSelector } from '../../hooks';
+import { actionLogOut } from '../../store/userSlice';
+import { togglePagination } from '../../store/UtilitySlice';
 import { capitalizeWords } from '../../utilities';
 import defaultAvatar from '../../assets/defaultAvatar.jpg';
 
@@ -21,6 +22,11 @@ const UserPanel: React.FC = () => {
     navigate('/sign-in');
   };
 
+  const handleCreateArticle = () => {
+    dispatch(togglePagination(false));
+    navigate('/new-article');
+  };
+
   const unauthorized = (
     <>
       <Link to={'/sign-in'}>
@@ -34,7 +40,10 @@ const UserPanel: React.FC = () => {
 
   const authorized = (
     <>
-      <Button className={`${style['user-panel__articleBtn']} ${style['active']}`}>
+      <Button
+        className={`${style['user-panel__articleBtn']} ${style['active']}`}
+        onClick={handleCreateArticle}
+      >
         Create article
       </Button>
       <Link to={'/profile'}>
@@ -53,8 +62,8 @@ const UserPanel: React.FC = () => {
 
   return (
     <Space className={style['user-panel']}>
-      {userStatus === US.AUTHENTICATED && authorized}
-      {userStatus === US.UNAUTHENTICATED && unauthorized}
+      {userStatus === US.AUTH && authorized}
+      {userStatus === US.UNAUTH && unauthorized}
     </Space>
   );
 };

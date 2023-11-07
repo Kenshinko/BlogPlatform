@@ -1,48 +1,54 @@
-import { useEffect } from 'react';
-import { Avatar, Card, Skeleton, Space, Tag, Typography } from 'antd';
-const { Paragraph } = Typography;
-import { HeartOutlined, HeartFilled, DotChartOutlined } from '@ant-design/icons';
-import { Link, useParams } from 'react-router-dom';
-import Markdown from 'react-markdown';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Markdown from 'markdown-to-jsx';
 import { nanoid } from 'nanoid';
 import { format } from 'date-fns';
+import { HeartOutlined, HeartFilled, DotChartOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Popconfirm, Skeleton, Space, Tag, Typography } from 'antd';
+const { Paragraph } = Typography;
 
-import { FS } from '../../../types/app.types';
+import { FS, IAuthor, US } from '../../../types/app.types';
 import { IArticleProps } from '../../../types/props.types';
-import { fetchAnArticle } from '../../../services/RealWorld.api';
+import {
+  addFavorite,
+  deleteArticle,
+  fetchAnArticle,
+  fetchArticles,
+  removeFavorite,
+} from '../../../services/RealWorld.api';
 import { toggleOnArticle, togglePagination } from '../../../store/UtilitySlice';
 import { useAppDispatch, useStateSelector } from '../../../hooks';
 import { capitalizeWords } from '../../../utilities';
+import sidestyle from '../../UserPanel/UserPanel.module.scss';
 
 import style from './Article.module.scss';
 
 const Article: React.FC<IArticleProps> = ({ article }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const {
     article: fullArticle,
     status: articleStatus,
     error,
   } = useStateSelector((state) => state.article);
+  const currentUser = useStateSelector((state) => state.user.user.username);
+  const userStatus = useStateSelector((state) => state.user.userStatus);
   const isPreview = useStateSelector((state) => state.utilities.isPreview);
+  const pageNumber = useStateSelector((state) => state.utilities.currentPage);
   const listStatus: FS = useStateSelector((state) => state.articles.status);
 
   // Получаем id статьи, из адресной строки, пропсов или в крайнем случае из стора
   let { slug } = useParams();
   if (!slug) slug = article?.slug || fullArticle?.slug;
 
-  useEffect(() => {
-    // Обновляем страницу одной статьи
-    if (articleStatus === FS.IDLE && listStatus !== FS.SUCCEEDED) {
-      dispatch(toggleOnArticle(false));
-      dispatch(togglePagination(false));
-      if (slug) {
-        dispatch(fetchAnArticle(slug));
-      }
-    }
-  }, [articleStatus, listStatus, slug, dispatch]);
-
   const articleData = article || fullArticle;
-  let title, favorited, favoritesCount, tagList, description, createdAt: string, author, body;
+  let title,
+    favorited = false,
+    favoritesCount,
+    tagList: string[] | undefined,
+    description,
+    createdAt: string | undefined,
+    author: IAuthor | undefined,
+    body: string | undefined;
   let username, image;
 
   if (articleData) {
@@ -54,6 +60,44 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
   const renderTags = tagList?.map((tag: string) => {
     return <Tag key={nanoid()}>{tag}</Tag>;
   });
+
+  const handleDeleteArticle = () => {
+    if (slug) {
+      dispatch(deleteArticle(slug));
+      dispatch(toggleOnArticle(true));
+      navigate('/articles');
+    }
+  };
+
+  const handleEditArticle = () => {
+    if (slug) navigate(`/articles/${slug}/edit`);
+  };
+
+  const handleToggleFavorite = () => {
+    if (favorited && slug) {
+      dispatch(removeFavorite(slug)).then(() =>
+        dispatch(fetchArticles({ limit: 5, offset: 5 * (pageNumber - 1) }))
+      );
+    }
+
+    if (!favorited && slug) {
+      dispatch(addFavorite(slug)).then(() =>
+        dispatch(fetchArticles({ limit: 5, offset: 5 * (pageNumber - 1) }))
+      );
+    }
+
+    if (favorited && !isPreview && slug) {
+      dispatch(removeFavorite(slug)).then(() => {
+        if (slug) dispatch(fetchAnArticle(slug));
+      });
+    }
+
+    if (!favorited && !isPreview && slug) {
+      dispatch(addFavorite(slug)).then(() => {
+        if (slug) dispatch(fetchAnArticle(slug));
+      });
+    }
+  };
 
   const cardPlaceholder = (
     <Card
@@ -114,26 +158,58 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
             >
               <h3 className={style['article__title']}>{title}</h3>
             </Link>
-            {favorited ? <HeartFilled className={style['article__fav']} /> : <HeartOutlined />}
+            <button className={style['article__fav-btn']} onClick={handleToggleFavorite}>
+              {favorited ? (
+                <HeartFilled className={style['article__fav']} />
+              ) : (
+                <HeartOutlined />
+              )}
+            </button>
             <span>{favoritesCount}</span>
           </Space>
-          <Space className={style['article__tags']}>{renderTags}</Space>
+          <Space className={style['article__tags']}>
+            {tagList && tagList?.length > 0 ? renderTags : <div style={{ height: 22 }}></div>}
+          </Space>
           <Paragraph className={style['article__prev-text']} ellipsis={{ rows: 2 }}>
             {description}
           </Paragraph>
         </div>
-        <div className={style['article__side-info']}>
-          <div className={style['article__about']}>
-            <span className={style['article__author']}>
-              {username && capitalizeWords(username)}
-            </span>
-            <span className={style['article__publish-date']}>
-              {createdAt! ? format(new Date(createdAt), 'MMMM d, yyyy') : null}
-            </span>
+        <div className={style['article__pos']}>
+          <div className={style['article__side-info']}>
+            <div className={style['article__about']}>
+              <span className={style['article__author']}>
+                {username && capitalizeWords(username)}
+              </span>
+              <span className={style['article__publish-date']}>
+                {createdAt ? format(new Date(createdAt), 'MMMM d, yyyy') : null}
+              </span>
+            </div>
+            <Avatar size={45} src={image} />
           </div>
-          <Avatar size={45} src={image} />
+          {author && userStatus === US.AUTH && !isPreview && currentUser === username && (
+            <div className={style['article__btns-field']}>
+              <Popconfirm
+                placement="rightTop"
+                title="Are you sure to delete this article?"
+                okText="Yes"
+                cancelText="No"
+                onConfirm={handleDeleteArticle}
+              >
+                <Button className={style['article__btn']} danger ghost>
+                  Delete
+                </Button>
+              </Popconfirm>
+              <Button
+                className={`${style['article__btn']} ${sidestyle['active']}`}
+                onClick={handleEditArticle}
+              >
+                Edit
+              </Button>
+            </div>
+          )}
         </div>
       </div>
+      {/* @ts-ignore */}
       {!isPreview ? <Markdown className={style['article__body']}>{body}</Markdown> : null}
     </Card>
   );

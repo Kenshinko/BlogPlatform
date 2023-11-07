@@ -1,10 +1,10 @@
 import { Form, Input } from 'antd';
 import { Controller } from 'react-hook-form';
 
-import { IFromInput } from '../../../../types/app.types';
+import { IFormInput } from '../../../../types/app.types';
 import style from '../UserForm.module.scss';
 
-const ConfirmPasswordInput: React.FC<IFromInput> = ({ control, errors, getValues }) => {
+const ConfirmPasswordInput: React.FC<IFormInput> = ({ control, errors, getValues }) => {
   return (
     <Form.Item className={style['user-form__text']} label="Repeat Password">
       <Controller

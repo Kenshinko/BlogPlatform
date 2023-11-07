@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Card, Divider, Form } from 'antd';
 
-import { US } from '../../../types/app.types';
 import { IUserDataUpdate, IUserFormRequest } from '../../../types/api.types';
 import { createUser, loginUser, updateUser } from '../../../services/RealWorld.api';
 import { useAppDispatch, useStateSelector } from '../../../hooks';
@@ -23,7 +22,6 @@ const UserForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const currentPage = useLocation();
-  const userStatus: string = useStateSelector((state) => state.user.userStatus);
   const userEmail: string = useStateSelector((state) => state.user.user.email);
   const userName: string = useStateSelector((state) => state.user.user.username);
   const userAvatar = useStateSelector((state) => state.user.user.image);
@@ -41,33 +39,34 @@ const UserForm: React.FC = () => {
     if (isArticlesList) {
       dispatch(togglePagination(false));
     }
-
-    if (userStatus === US.AUTHENTICATED && currentPage.pathname !== '/profile') {
-      navigate('/articles');
-    }
-  }, [isArticlesList, userStatus, currentPage.pathname, dispatch, navigate]);
+  }, [isArticlesList, dispatch]);
 
   const onSubmit = (data: IUserFormRequest) => {
     if (currentPage.pathname === '/sign-up') {
       const { email, username, password } = data;
+
       dispatch(createUser({ email, username, password }));
+      navigate('/sign-in');
     }
 
     if (currentPage.pathname === '/sign-in') {
       const { email, password } = data;
+
       dispatch(loginUser({ email, password }));
+      navigate('/articles');
     }
 
     if (currentPage.pathname === '/profile') {
       const { email, username, password, image } = data;
       const bio = '';
       const userData: IUserDataUpdate = { username, bio };
+
       if (email) userData.email = email;
       if (username) userData.username = username;
       if (password) userData.password = password;
       if (image) userData.image = image;
-
       dispatch(updateUser(userData));
+
       navigate('/articles');
     }
 

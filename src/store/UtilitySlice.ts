@@ -1,9 +1,10 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 // State
-const initialState: { isArticlesList: boolean; isPreview: boolean } = {
+const initialState: { isArticlesList: boolean; isPreview: boolean; currentPage: number } = {
   isArticlesList: true,
   isPreview: true,
+  currentPage: 1,
 };
 
 // Slices
@@ -17,8 +18,12 @@ const utilitySlice = createSlice({
     toggleOnArticle(state, action: PayloadAction<boolean>) {
       state.isPreview = action.payload;
     },
+    setCurrentPageNumber(state, action: PayloadAction<number>) {
+      state.currentPage = action.payload;
+    },
   },
 });
 
 export default utilitySlice.reducer;
-export const { togglePagination, toggleOnArticle } = utilitySlice.actions;
+export const { togglePagination, toggleOnArticle, setCurrentPageNumber } =
+  utilitySlice.actions;

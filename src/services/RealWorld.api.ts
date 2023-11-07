@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { IUserDataUpdate } from '../types/api.types';
+import { ICreateArticleRequest, IUserDataUpdate } from '../types/api.types';
 
 const baseURL = 'https://blog.kata.academy/api/';
 const currentLocalStorage: string | null = localStorage.getItem('persist:MyBlog');
@@ -77,5 +77,35 @@ export const updateUser = createAsyncThunk(
   'async/updateUser',
   async (user: IUserDataUpdate) => {
     return await requestApi('/user', { user }, {}, Method.PUT);
+  }
+);
+
+export const createArticle = createAsyncThunk(
+  'async/createArticle',
+  async (article: ICreateArticleRequest) => {
+    return await requestApi('/articles', { article }, {}, Method.POST);
+  }
+);
+
+export const updateArticle = createAsyncThunk(
+  'async/updateArticle',
+  async (data: { article: ICreateArticleRequest; slug: string }) => {
+    const { slug, article } = data;
+    return await requestApi(`/articles/${slug}`, { article }, {}, Method.PUT);
+  }
+);
+
+export const deleteArticle = createAsyncThunk('async/deleteArticle', async (slug: string) => {
+  return await requestApi(`/articles/${slug}`, {}, {}, Method.DELETE);
+});
+
+export const addFavorite = createAsyncThunk('async/addFavorite', async (slug: string) => {
+  return await requestApi(`/articles/${slug}/favorite`, {}, {}, Method.POST);
+});
+
+export const removeFavorite = createAsyncThunk(
+  'async/removeFavorite',
+  async (slug: string) => {
+    return await requestApi(`/articles/${slug}/favorite`, {}, {}, Method.DELETE);
   }
 );

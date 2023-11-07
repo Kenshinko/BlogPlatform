@@ -14,7 +14,11 @@ const initialState: IArticleResponce = {
 const articlesSlice = createSlice({
   name: 'article',
   initialState,
-  reducers: {},
+  reducers: {
+    actionUserUpdateArticle(state) {
+      console.log(state);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAnArticle.pending, (state) => {
@@ -32,3 +36,4 @@ const articlesSlice = createSlice({
 });
 
 export default articlesSlice.reducer;
+export const { actionUserUpdateArticle } = articlesSlice.actions;

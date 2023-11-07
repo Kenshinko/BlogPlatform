@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Control, FieldErrors, UseFormGetValues, UseFormWatch } from 'react-hook-form';
 
 import { IUserFormRequest } from './api.types';
+import { ICreateArticleProps } from './props.types';
 
 export const enum FS {
   IDLE = 'idle',
@@ -11,9 +12,8 @@ export const enum FS {
 }
 
 export const enum US {
-  AUTHENTICATED = 'authenticated',
-  UNAUTHENTICATED = 'unauthenticated',
-  EDITS_PROFILE = 'edits_profile',
+  AUTH = 'authenticated',
+  UNAUTH = 'unauthenticated',
 }
 
 export type IArticle = {
@@ -35,12 +35,18 @@ export type IAuthor = {
   following: boolean;
 };
 
-export type IFromInput = {
+export type IFormInput = {
   control: Control<IUserFormRequest>;
-  errors: FieldErrors<IUserFormRequest>;
+  errors?: FieldErrors<IUserFormRequest>;
   label?: string;
   inputValue?: string | null | undefined;
   getValues?: UseFormGetValues<IUserFormRequest>;
+};
+
+export type IArticleFormInput = {
+  control: Control<ICreateArticleProps>;
+  errors: FieldErrors<ICreateArticleProps>;
+  inputValue?: string | null | undefined;
 };
 
 export type IFormInfo = {
