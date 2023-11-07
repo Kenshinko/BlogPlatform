@@ -1,11 +1,11 @@
 import { Controller } from 'react-hook-form';
 import { Form, Input } from 'antd';
 
-import { FS, IFromInput } from '../../../../types/app.types';
+import { FS, IFormInput } from '../../../../types/app.types';
 import { useStateSelector } from '../../../../hooks';
 import style from '../UserForm.module.scss';
 
-const PasswordInput: React.FC<IFromInput> = ({ control, errors, label }) => {
+const PasswordInput: React.FC<IFormInput> = ({ control, errors, label }) => {
   const fetchStatus = useStateSelector((state) => state.user.fetchStatus);
 
   return (

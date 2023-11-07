@@ -30,6 +30,13 @@ export type IUserFormRequest = {
   agreement?: boolean;
 };
 
+export type ICreateArticleRequest = {
+  title: string;
+  description: string;
+  body: string;
+  tagList?: string[];
+};
+
 export type IUserDataUpdate = {
   email?: string;
   username: string;

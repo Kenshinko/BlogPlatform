@@ -1,10 +1,10 @@
 import { Controller } from 'react-hook-form';
 import { Form, Input } from 'antd';
 
-import { IFromInput } from '../../../../types/app.types';
+import { IFormInput } from '../../../../types/app.types';
 import style from '../UserForm.module.scss';
 
-const AvatarInput: React.FC<IFromInput> = ({ control, errors, inputValue }) => {
+const AvatarInput: React.FC<IFormInput> = ({ control, errors, inputValue }) => {
   return (
     <Form.Item className={style['user-form__text']} label="Avatar image (url)">
       <Controller
