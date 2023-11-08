@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Markdown from 'markdown-to-jsx';
 import { nanoid } from 'nanoid';
 import { format } from 'date-fns';
@@ -25,6 +25,7 @@ import style from './Article.module.scss';
 const Article: React.FC<IArticleProps> = ({ article, preview }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const currentPage = useLocation();
   const {
     article: fullArticle,
     status: articleStatus,
@@ -35,6 +36,8 @@ const Article: React.FC<IArticleProps> = ({ article, preview }) => {
   const isPreview = useStateSelector((state) => state.utilities.isPreview);
   const pageNumber = useStateSelector((state) => state.utilities.currentPage);
   const listStatus: FS = useStateSelector((state) => state.articles.status);
+  //@ts-ignore
+  const isArticlePage = currentPage.pathname !== '/articles' || currentPage.pathname !== '/';
 
   // Получаем id статьи, из адресной строки, пропсов или в крайнем случае из стора
   let { slug } = useParams();
@@ -210,10 +213,12 @@ const Article: React.FC<IArticleProps> = ({ article, preview }) => {
     </Card>
   );
 
-  useEffect(() => {
-    dispatch(toggleArticlePreview(false));
-    dispatch(togglePagination(false));
-  }, [preview]);
+  // useEffect(() => {
+  //   if (isArticlePage) {
+  //     dispatch(toggleArticlePreview(false));
+  //     dispatch(togglePagination(false));
+  //   }
+  // }, [isArticlePage, preview]);
 
   return (
     <>{articleStatus === FS.LOADING || listStatus === FS.LOADING ? cardPlaceholder : card}</>
