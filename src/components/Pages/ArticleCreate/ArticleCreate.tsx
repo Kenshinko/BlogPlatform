@@ -19,10 +19,10 @@ const ArticleCreate: React.FC<IEditArticleProps> = ({ editMode }) => {
   const navigate = useNavigate();
   const currentPage = useLocation();
   const { slug } = useParams();
-  const currentTitle = useStateSelector((state) => state.article.article?.title);
-  const currentDesc = useStateSelector((state) => state.article.article?.description);
-  const currentText = useStateSelector((state) => state.article.article?.body);
-  const currentTags = useStateSelector((state) => state.article.article?.tagList);
+  const currentTitle = useStateSelector((state) => state.articles.article?.title);
+  const currentDesc = useStateSelector((state) => state.articles.article?.description);
+  const currentText = useStateSelector((state) => state.articles.article?.body);
+  const currentTags = useStateSelector((state) => state.articles.article?.tagList);
 
   const {
     control,

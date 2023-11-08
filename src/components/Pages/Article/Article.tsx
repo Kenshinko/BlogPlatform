@@ -29,7 +29,7 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
     article: fullArticle,
     status: articleStatus,
     error,
-  } = useStateSelector((state) => state.article);
+  } = useStateSelector((state) => state.articles);
   const currentUser = useStateSelector((state) => state.user.user.username);
   const userStatus = useStateSelector((state) => state.user.userStatus);
   const isPreview = useStateSelector((state) => state.utilities.isPreview);
@@ -46,14 +46,24 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
     favoritesCount,
     tagList: string[] | undefined,
     description,
-    createdAt: string | undefined,
+    createdAt: string | number | Date = 0,
+    updatedAt: string | number | Date = 0,
     author: IAuthor | undefined,
     body: string | undefined;
   let username, image;
 
   if (articleData) {
-    ({ title, favorited, favoritesCount, tagList, description, createdAt, author, body } =
-      articleData);
+    ({
+      title,
+      favorited,
+      favoritesCount,
+      tagList,
+      description,
+      createdAt,
+      updatedAt,
+      author,
+      body,
+    } = articleData);
     ({ username, image } = author);
   }
 
@@ -75,27 +85,11 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
 
   const handleToggleFavorite = () => {
     if (favorited && slug) {
-      dispatch(removeFavorite(slug)).then(() =>
-        dispatch(fetchArticles({ limit: 5, offset: 5 * (pageNumber - 1) }))
-      );
+      dispatch(removeFavorite(slug));
     }
 
     if (!favorited && slug) {
-      dispatch(addFavorite(slug)).then(() =>
-        dispatch(fetchArticles({ limit: 5, offset: 5 * (pageNumber - 1) }))
-      );
-    }
-
-    if (favorited && !isPreview && slug) {
-      dispatch(removeFavorite(slug)).then(() => {
-        if (slug) dispatch(fetchAnArticle(slug));
-      });
-    }
-
-    if (!favorited && !isPreview && slug) {
-      dispatch(addFavorite(slug)).then(() => {
-        if (slug) dispatch(fetchAnArticle(slug));
-      });
+      dispatch(addFavorite(slug));
     }
   };
 
@@ -181,7 +175,9 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
                 {username && capitalizeWords(username)}
               </span>
               <span className={style['article__publish-date']}>
-                {createdAt ? format(new Date(createdAt), 'MMMM d, yyyy') : null}
+                {createdAt === updatedAt
+                  ? format(new Date(createdAt), 'MMMM d, yyyy')
+                  : format(new Date(updatedAt), 'MMMM d, yyyy')}
               </span>
             </div>
             <Avatar size={45} src={image} />
