@@ -34,8 +34,8 @@ const App: React.FC = () => {
   };
 
   const handleSetPageNumber = (page: number) => {
-    dispatch(fetchArticles({ limit: 5, offset: 5 * (page - 1) }));
     dispatch(setCurrentPageNumber(page));
+    dispatch(fetchArticles({ limit: 5, offset: 5 * (page - 1) }));
   };
 
   return (

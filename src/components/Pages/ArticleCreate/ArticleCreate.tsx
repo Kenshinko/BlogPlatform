@@ -34,7 +34,7 @@ const ArticleCreate: React.FC<IEditArticleProps> = ({ editMode }) => {
       title: editMode ? currentTitle : '',
       description: editMode ? currentDesc : '',
       body: editMode ? currentText : '',
-      tags: editMode || hasTags ? currentTags?.map((tag) => ({ name: tag })) : [{ name: '' }],
+      tags: editMode && hasTags ? currentTags?.map((tag) => ({ name: tag })) : [{ name: '' }],
     },
     mode: 'onBlur',
   });
