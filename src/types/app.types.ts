@@ -58,6 +58,7 @@ export type IFormInfo = {
 export type IFormButton = {
   actionText: string;
   enable?: boolean;
+  editMode?: boolean;
   watch?: UseFormWatch<IUserFormRequest>;
 };
 

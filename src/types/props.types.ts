@@ -20,3 +20,7 @@ export type ICreateArticleProps = {
 export type IEditArticleProps = {
   editMode?: boolean;
 };
+
+export type IArticleList = {
+  preview: boolean;
+};

@@ -2,11 +2,14 @@ import { ConfigProvider } from 'antd';
 import { useLocation } from 'react-router-dom';
 
 import { ThemeComponentWrapper } from '../../types/app.types';
+import { useStateSelector } from '../../hooks';
 
 const ThemeProvider: React.FC<ThemeComponentWrapper> = ({ children }) => {
   const currentPage = useLocation();
+  const slug = useStateSelector((state) => state.articles.article?.slug);
   const isCreacteArticlePage =
-    currentPage.pathname === '/new-article' || currentPage.pathname === '/articles/:slug/edit';
+    currentPage.pathname === '/new-article' ||
+    currentPage.pathname === `/articles/${slug}/edit`;
 
   return (
     <ConfigProvider

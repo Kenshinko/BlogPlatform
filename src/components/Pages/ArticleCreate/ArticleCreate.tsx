@@ -5,7 +5,7 @@ import { Card, Form } from 'antd';
 import { useAppDispatch, useStateSelector } from '../../../hooks';
 import { createArticle, updateArticle } from '../../../services/RealWorld.api';
 import { ICreateArticleProps, IEditArticleProps } from '../../../types/props.types';
-import { toggleOnArticle } from '../../../store/UtilitySlice';
+import { setCurrentPageNumber, toggleArticlePreview } from '../../../store/UtilitySlice';
 import Tags from '../../Tags';
 import SubmitButton from '../UserForm/SubmitButton';
 
@@ -23,6 +23,7 @@ const ArticleCreate: React.FC<IEditArticleProps> = ({ editMode }) => {
   const currentDesc = useStateSelector((state) => state.articles.article?.description);
   const currentText = useStateSelector((state) => state.articles.article?.body);
   const currentTags = useStateSelector((state) => state.articles.article?.tagList);
+  const hasTags = currentTags && currentTags?.length > 0;
 
   const {
     control,
@@ -33,7 +34,7 @@ const ArticleCreate: React.FC<IEditArticleProps> = ({ editMode }) => {
       title: editMode ? currentTitle : '',
       description: editMode ? currentDesc : '',
       body: editMode ? currentText : '',
-      tags: editMode ? currentTags?.map((tag) => ({ name: tag })) : [{ name: '' }],
+      tags: editMode || hasTags ? currentTags?.map((tag) => ({ name: tag })) : [{ name: '' }],
     },
     mode: 'onBlur',
   });
@@ -51,28 +52,31 @@ const ArticleCreate: React.FC<IEditArticleProps> = ({ editMode }) => {
     if (currentPage.pathname === '/new-article') {
       if (title && description && body) {
         dispatch(createArticle({ title, description, body, tagList }));
+        dispatch(toggleArticlePreview(true));
+        dispatch(setCurrentPageNumber(1));
+        navigate('/articles');
       }
     }
 
     if (currentPage.pathname !== '/new-article') {
       if (slug) {
         dispatch(updateArticle({ article: { title, description, body, tagList }, slug }));
+        navigate(`/articles/${slug}`);
       }
     }
-
-    dispatch(toggleOnArticle(true));
-    navigate('/articles');
   };
 
   return (
     <Card className={style['article-form']} bodyStyle={{ padding: 0 }}>
       <Form layout={'vertical'} onFinish={handleSubmit(onSubmit)}>
-        <h3 className={style['article-form__title']}>Create new article</h3>
+        <h3 className={style['article-form__title']}>
+          {currentPage.pathname === '/new-article' ? 'Create new article' : 'Edit article'}
+        </h3>
         <ArticleTitleInput control={control} errors={errors} />
         <ArticleDescInput control={control} errors={errors} />
         <ArticleTextInput control={control} errors={errors} />
         <Tags control={control} />
-        <SubmitButton actionText="Send" enable={true} />
+        <SubmitButton actionText="Send" enable={true} editMode />
       </Form>
     </Card>
   );
