@@ -15,7 +15,7 @@ const utilitySlice = createSlice({
     togglePagination(state, action: PayloadAction<boolean>) {
       state.isArticlesList = action.payload;
     },
-    toggleOnArticle(state, action: PayloadAction<boolean>) {
+    toggleArticlePreview(state, action: PayloadAction<boolean>) {
       state.isPreview = action.payload;
     },
     setCurrentPageNumber(state, action: PayloadAction<number>) {
@@ -25,5 +25,5 @@ const utilitySlice = createSlice({
 });
 
 export default utilitySlice.reducer;
-export const { togglePagination, toggleOnArticle, setCurrentPageNumber } =
+export const { togglePagination, toggleArticlePreview, setCurrentPageNumber } =
   utilitySlice.actions;

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Layout, Pagination } from 'antd';
 const { Header, Footer } = Layout;
@@ -11,7 +10,7 @@ import ArticleCreate from '../Pages/ArticleCreate';
 import NotFoundPage from '../Pages/NotFoundPage';
 import {
   setCurrentPageNumber,
-  toggleOnArticle,
+  toggleArticlePreview,
   togglePagination,
 } from '../../store/UtilitySlice';
 import { fetchArticles } from '../../services/RealWorld.api';
@@ -28,7 +27,7 @@ const App: React.FC = () => {
   const pageNumber = useStateSelector((state) => state.utilities.currentPage);
 
   const handleMainPage = () => {
-    dispatch(toggleOnArticle(true));
+    dispatch(toggleArticlePreview(true));
     dispatch(togglePagination(true));
     dispatch(setCurrentPageNumber(1));
     dispatch(fetchArticles({ limit: 5, offset: 0 }));
@@ -53,8 +52,8 @@ const App: React.FC = () => {
       </Header>
 
       <Routes>
-        <Route path="/" element={<ArticlesList />} />
-        <Route path="/articles" element={<ArticlesList />} />
+        <Route path="/" element={<ArticlesList preview={true} />} />
+        <Route path="/articles" element={<ArticlesList preview={true} />} />
         <Route path="/articles/:slug" element={<Article preview={false} />} />
         {/* Вход с систему */}
         <Route

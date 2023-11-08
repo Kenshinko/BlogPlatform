@@ -19,10 +19,6 @@ const Tags: React.FC<FieldValues> = ({ control }) => {
     remove(idx);
   };
 
-  // useEffect(() => {
-  //   console.log(fields);
-  // });
-
   return (
     <div className={style['tags']}>
       {fields.map((field, index) => {

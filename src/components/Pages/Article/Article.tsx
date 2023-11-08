@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Markdown from 'markdown-to-jsx';
 import { nanoid } from 'nanoid';
@@ -12,17 +13,16 @@ import {
   addFavorite,
   deleteArticle,
   fetchAnArticle,
-  fetchArticles,
   removeFavorite,
 } from '../../../services/RealWorld.api';
-import { toggleOnArticle, togglePagination } from '../../../store/UtilitySlice';
+import { toggleArticlePreview, togglePagination } from '../../../store/UtilitySlice';
 import { useAppDispatch, useStateSelector } from '../../../hooks';
 import { capitalizeWords } from '../../../utilities';
 import sidestyle from '../../UserPanel/UserPanel.module.scss';
 
 import style from './Article.module.scss';
 
-const Article: React.FC<IArticleProps> = ({ article }) => {
+const Article: React.FC<IArticleProps> = ({ article, preview }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
@@ -74,7 +74,7 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
   const handleDeleteArticle = () => {
     if (slug) {
       dispatch(deleteArticle(slug));
-      dispatch(toggleOnArticle(true));
+      dispatch(toggleArticlePreview(true));
       navigate('/articles');
     }
   };
@@ -144,7 +144,7 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
               to={`/articles/${slug}`}
               onClick={() => {
                 if (slug && isPreview) {
-                  dispatch(toggleOnArticle(false));
+                  dispatch(toggleArticlePreview(false));
                   dispatch(togglePagination(false));
                   dispatch(fetchAnArticle(slug));
                 }
@@ -209,6 +209,11 @@ const Article: React.FC<IArticleProps> = ({ article }) => {
       {!isPreview ? <Markdown className={style['article__body']}>{body}</Markdown> : null}
     </Card>
   );
+
+  useEffect(() => {
+    dispatch(toggleArticlePreview(false));
+    dispatch(togglePagination(false));
+  }, [preview]);
 
   return (
     <>{articleStatus === FS.LOADING || listStatus === FS.LOADING ? cardPlaceholder : card}</>

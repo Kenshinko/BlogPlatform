@@ -65,12 +65,9 @@ const articlesSlice = createSlice({
         console.log(action.error.message);
       })
       // Обновление статьи
-      .addCase(updateArticle.pending, (state) => {
-        state.status = FS.LOADING;
-      })
       .addCase(updateArticle.fulfilled, (state, action) => {
         state.status = FS.SUCCEEDED;
-        console.log(action.payload.data);
+        state.article = action.payload.data.article;
       })
       .addCase(updateArticle.rejected, (state, action) => {
         state.status = FS.REJECTED;
@@ -94,7 +91,6 @@ const articlesSlice = createSlice({
 
         const { slug, favorited } = action.payload.data.article;
         const currArt = state.articles?.find((el) => el.slug === slug);
-        //@ts-ignore
         if (state.articles && currArt) {
           currArt.favorited = favorited;
           currArt.favoritesCount += 1;
