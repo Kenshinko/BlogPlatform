@@ -22,7 +22,7 @@ import sidestyle from '../../UserPanel/UserPanel.module.scss';
 
 import style from './Article.module.scss';
 
-const Article: React.FC<IArticleProps> = ({ article, preview }) => {
+const Article: React.FC<IArticleProps> = ({ article }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const currentPage = useLocation();
@@ -34,10 +34,8 @@ const Article: React.FC<IArticleProps> = ({ article, preview }) => {
   const currentUser = useStateSelector((state) => state.user.user.username);
   const userStatus = useStateSelector((state) => state.user.userStatus);
   const isPreview = useStateSelector((state) => state.utilities.isPreview);
-  const pageNumber = useStateSelector((state) => state.utilities.currentPage);
   const listStatus: FS = useStateSelector((state) => state.articles.status);
-  //@ts-ignore
-  const isArticlePage = currentPage.pathname !== '/articles' || currentPage.pathname !== '/';
+  const isArticlePage = currentPage.pathname !== '/articles' && currentPage.pathname !== '/';
 
   // Получаем id статьи, из адресной строки, пропсов или в крайнем случае из стора
   let { slug } = useParams();
@@ -213,12 +211,12 @@ const Article: React.FC<IArticleProps> = ({ article, preview }) => {
     </Card>
   );
 
-  // useEffect(() => {
-  //   if (isArticlePage) {
-  //     dispatch(toggleArticlePreview(false));
-  //     dispatch(togglePagination(false));
-  //   }
-  // }, [isArticlePage, preview]);
+  useEffect(() => {
+    if (isArticlePage && isPreview) {
+      dispatch(toggleArticlePreview(false));
+      dispatch(togglePagination(false));
+    }
+  }, [isArticlePage, isPreview, dispatch]);
 
   return (
     <>{articleStatus === FS.LOADING || listStatus === FS.LOADING ? cardPlaceholder : card}</>
