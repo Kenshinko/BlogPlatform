@@ -4,9 +4,6 @@ import axios from 'axios';
 import { ICreateArticleRequest, IUserDataUpdate } from '../types/api.types';
 
 const baseURL = 'https://blog.kata.academy/api/';
-const currentLocalStorage: string | null = localStorage.getItem('persist:MyBlog');
-const currentUser: string = JSON.parse(currentLocalStorage!)?.user;
-const userHasToken: string = currentUser && JSON.parse(currentUser).user.token;
 
 const enum Method {
   GET = 'GET',
@@ -21,11 +18,15 @@ const requestApi = async (
   params: object = {},
   method = Method.GET
 ) => {
+  const currentLocalStorage: string | null = localStorage.getItem('persist:MyBlog');
+  const currentUser: string = JSON.parse(currentLocalStorage!)?.user;
+  const userHasToken: string = currentUser && JSON.parse(currentUser).user.token;
+
   const headers: { [key: string]: string } = {};
 
   headers['X-Requested-With'] = 'XMLHttpRequest';
   headers['Content-Type'] = 'application/json';
-  if (userHasToken !== 'undefined') headers['Authorization'] = `Token ${userHasToken}`;
+  headers['Authorization'] = `Token ${userHasToken}`;
 
   const response = await axios.request({
     baseURL,
