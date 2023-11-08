@@ -9,8 +9,9 @@ export type IUserResponce = {
 };
 
 export type IServerResponce = {
-  articles: IArticle[];
-  articlesCount: number;
+  articles?: IArticle[];
+  articlesCount?: number;
+  article?: IArticle;
   status: FS;
   error?: string | null;
 };

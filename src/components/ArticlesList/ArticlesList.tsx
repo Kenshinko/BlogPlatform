@@ -12,7 +12,7 @@ import style from './ArticlesList.module.scss';
 const ArticlesList: React.FC = () => {
   const dispatch = useAppDispatch();
   const isArticlesList = useStateSelector((state) => state.utilities.isArticlesList);
-  const { articles, status, error } = useStateSelector((state) => state.articles);
+  const articlesList = useStateSelector((state) => state.articles.articles);
 
   useEffect(() => {
     if (!isArticlesList) {
@@ -22,7 +22,7 @@ const ArticlesList: React.FC = () => {
     dispatch(fetchArticles({ limit: 5, offset: 0 }));
   }, [isArticlesList, dispatch]);
 
-  const renderArticles = articles.map((article: IArticle) => {
+  const renderArticles = articlesList?.map((article: IArticle) => {
     const slug = article.slug;
 
     return <Article key={slug} article={article} preview={true} />;

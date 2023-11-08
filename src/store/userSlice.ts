@@ -1,16 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { FS, US } from '../types/app.types';
-import {
-  createUser,
-  loginUser,
-  updateUser,
-  createArticle,
-  updateArticle,
-  deleteArticle,
-  addFavorite,
-  removeFavorite,
-} from '../services/RealWorld.api';
+import { createUser, loginUser, updateUser } from '../services/RealWorld.api';
 import { IUserResponce } from '../types/api.types';
 
 // State
@@ -89,66 +80,6 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state) => {
         state.fetchStatus = FS.REJECTED;
-      })
-      // Публикация статьи
-      .addCase(createArticle.pending, (state) => {
-        state.fetchStatus = FS.LOADING;
-      })
-      .addCase(createArticle.fulfilled, (state, action) => {
-        state.fetchStatus = FS.SUCCEEDED;
-        console.log(action.payload.data);
-      })
-      .addCase(createArticle.rejected, (state, action) => {
-        state.fetchStatus = FS.REJECTED;
-        console.log(action.error.message);
-      })
-      // Обновление статьи
-      .addCase(updateArticle.pending, (state) => {
-        state.fetchStatus = FS.LOADING;
-      })
-      .addCase(updateArticle.fulfilled, (state, action) => {
-        state.fetchStatus = FS.SUCCEEDED;
-        console.log(action.payload.data);
-      })
-      .addCase(updateArticle.rejected, (state, action) => {
-        state.fetchStatus = FS.REJECTED;
-        console.log(action.error.message);
-      })
-      // Удаление статьи
-      .addCase(deleteArticle.pending, (state) => {
-        state.fetchStatus = FS.LOADING;
-      })
-      .addCase(deleteArticle.fulfilled, (state, action) => {
-        state.fetchStatus = FS.SUCCEEDED;
-        console.log(action.payload.data);
-      })
-      .addCase(deleteArticle.rejected, (state, action) => {
-        state.fetchStatus = FS.REJECTED;
-        console.log(action.error.message);
-      })
-      // Добавление в избранное
-      .addCase(addFavorite.pending, (state) => {
-        state.fetchStatus = FS.LOADING;
-      })
-      .addCase(addFavorite.fulfilled, (state, action) => {
-        state.fetchStatus = FS.SUCCEEDED;
-        console.log(action.payload.data);
-      })
-      .addCase(addFavorite.rejected, (state, action) => {
-        state.fetchStatus = FS.REJECTED;
-        console.log(action.error.message);
-      })
-      // Удаление из избранного
-      .addCase(removeFavorite.pending, (state) => {
-        state.fetchStatus = FS.LOADING;
-      })
-      .addCase(removeFavorite.fulfilled, (state, action) => {
-        state.fetchStatus = FS.SUCCEEDED;
-        console.log(action.payload.data);
-      })
-      .addCase(removeFavorite.rejected, (state, action) => {
-        state.fetchStatus = FS.REJECTED;
-        console.log(action.error.message);
       });
   },
 });
